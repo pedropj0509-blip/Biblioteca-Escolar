@@ -4,7 +4,7 @@ Projeto web para gerenciamento de uma biblioteca escolar, desenvolvido para fins
 
 ## Status
 
-Fase atual: **Fase 1 - Planejamento**
+Fase atual: **Fase 2 - Estrutura Base**
 
 Entregáveis da fase:
 
@@ -12,6 +12,10 @@ Entregáveis da fase:
 - Plano de implementação em `docs/Implementation_Plan.md`
 - Estrutura inicial do projeto
 - README com visão geral, escopo e organização
+- Estrutura HTML base das páginas
+- CSS global com identidade visual inicial
+- JavaScript inicial para navegação
+- Header, footer e menu responsivo
 
 ## Escopo
 
@@ -87,4 +91,4 @@ A identidade visual seguirá a paleta definida no PRD:
 
 ## Como executar
 
-No momento, a Fase 1 cobre planejamento e estruturação. A execução da aplicação será definida nas próximas fases, quando a estrutura HTML, CSS, JavaScript e back-end forem implementados.
+Abra o arquivo `index.html` no navegador para visualizar a estrutura base da aplicação. As funcionalidades dinâmicas serão implementadas nas próximas fases.

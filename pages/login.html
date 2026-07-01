@@ -1,1 +1,43 @@
-<!-- Login page structure will be implemented in Phase 2. -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Biblioteca Virtual Escolar</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/main.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <a class="brand" href="../index.html" aria-label="Página inicial da Biblioteca Virtual Escolar"><span class="brand-mark" aria-hidden="true">B</span><span>Biblioteca Escolar</span></a>
+      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="primary-menu"><span></span><span></span><span></span></button>
+      <nav class="primary-nav" id="primary-menu" aria-label="Menu principal">
+        <a href="../index.html">Início</a><a href="catalogo.html">Catálogo</a><a href="reservas.html">Reservas</a><a href="perfil.html">Perfil</a><a href="admin.html">Admin</a><a class="nav-action" href="login.html">Entrar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-title">
+      <div class="container">
+        <p class="section-kicker">Acesso</p>
+        <h1>Entrar na biblioteca</h1>
+        <p>Base visual do formulário de autenticação que será conectado na Fase 6.</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container content-panel">
+        <h2>Login</h2>
+        <form class="form-shell">
+          <div class="form-field"><label for="email">E-mail</label><input id="email" type="email" placeholder="seu.email@escola.com"></div>
+          <div class="form-field"><label for="senha">Senha</label><input id="senha" type="password" placeholder="Sua senha"></div>
+          <button class="button button-primary" type="button">Entrar</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-content"><p>&copy; 2026 Biblioteca Virtual Escolar.</p><p>Acesso de alunos, professores e administradores.</p></div></footer>
+</body>
+</html>

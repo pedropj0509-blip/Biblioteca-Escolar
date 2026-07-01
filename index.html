@@ -1,1 +1,75 @@
-<!-- Home page structure will be implemented in Phase 2. -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Virtual Escolar</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <a class="brand" href="index.html" aria-label="Página inicial da Biblioteca Virtual Escolar">
+        <span class="brand-mark" aria-hidden="true">B</span>
+        <span>Biblioteca Escolar</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="primary-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="primary-nav" id="primary-menu" aria-label="Menu principal">
+        <a href="index.html">Início</a>
+        <a href="pages/catalogo.html">Catálogo</a>
+        <a href="pages/reservas.html">Reservas</a>
+        <a href="pages/perfil.html">Perfil</a>
+        <a href="pages/admin.html">Admin</a>
+        <a class="nav-action" href="pages/login.html">Entrar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-content">
+        <div>
+          <p class="section-kicker">Biblioteca Virtual Escolar</p>
+          <h1>Consulta, reserva e gestão do acervo em um só lugar.</h1>
+          <p class="hero-text">Uma base simples e organizada para alunos, professores e administradores acessarem livros, reservas e informações da biblioteca.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="pages/catalogo.html">Ver catálogo</a>
+            <a class="button button-secondary" href="pages/cadastro.html">Criar conta</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container feature-grid">
+        <article class="feature-card">
+          <h2>Catálogo</h2>
+          <p>Listagem do acervo escolar com espaço preparado para disponibilidade, categorias e detalhes.</p>
+        </article>
+        <article class="feature-card">
+          <h2>Reservas</h2>
+          <p>Fluxo planejado para que usuários autenticados possam solicitar livros disponíveis.</p>
+        </article>
+        <article class="feature-card">
+          <h2>Administração</h2>
+          <p>Área base para cadastro de livros, acompanhamento de reservas e gestão do sistema.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>&copy; 2026 Biblioteca Virtual Escolar.</p>
+      <p>Projeto acadêmico desenvolvido para gestão de biblioteca escolar.</p>
+    </div>
+  </footer>
+</body>
+</html>
