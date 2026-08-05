@@ -4,7 +4,7 @@ Projeto web para gerenciamento de uma biblioteca escolar, desenvolvido para fins
 
 ## Status
 
-Fase atual: **Fase 2 - Estrutura Base**
+Fase atual: **Fase 3 - Catálogo**
 
 Entregáveis da fase:
 
@@ -16,6 +16,9 @@ Entregáveis da fase:
 - CSS global com identidade visual inicial
 - JavaScript inicial para navegação
 - Header, footer e menu responsivo
+- Cards de livros no catálogo
+- Exibição de disponibilidade dos livros
+- Layout responsivo para listagem do acervo
 
 ## Escopo
 

@@ -188,9 +188,9 @@ Adequação da interface para:
 
 | Prioridade | Funcionalidade | Status |
 |---|---|---|
-| Alta | Estrutura inicial | - |
-| Alta | Página inicial | - |
-| Alta | Catálogo | - |
+| Alta | Estrutura inicial | Concluído |
+| Alta | Página inicial | Concluído |
+| Alta | Catálogo | Concluído |
 | Alta | Pesquisa | - |
 | Alta | Detalhes do livro | - |
 | Alta | Login | - |
