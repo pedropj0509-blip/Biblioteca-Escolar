@@ -191,7 +191,7 @@ Adequação da interface para:
 | Alta | Estrutura inicial | Concluído |
 | Alta | Página inicial | Concluído |
 | Alta | Catálogo | Concluído |
-| Alta | Pesquisa | - |
+| Alta | Pesquisa | Concluído |
 | Alta | Detalhes do livro | - |
 | Alta | Login | - |
 | Alta | Cadastro | - |

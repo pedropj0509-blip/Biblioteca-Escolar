@@ -35,9 +35,25 @@
       </div>
     </section>
 
-    <section class="section">
-      <div class="container book-grid">
-        <article class="book-card">
+<section class="section">
+      <div class="container">
+        <div class="search-bar" role="search">
+          <label class="search-label" for="search-input">Pesquisar no acervo</label>
+          <div class="search-controls">
+            <input
+              id="search-input"
+              class="search-input"
+              type="search"
+              placeholder="Busque por título, autor ou categoria..."
+              autocomplete="off"
+            >
+            <button class="button button-primary search-clear" type="button" aria-label="Limpar busca">Limpar</button>
+          </div>
+          <p class="search-results-info" id="search-results-info" aria-live="polite"></p>
+        </div>
+
+        <div class="book-grid" id="book-grid">
+          <article class="book-card" data-title="dom casmurro" data-author="machado de assis" data-category="romance">
           <div class="book-cover" aria-hidden="true">
             <span>DB</span>
           </div>
@@ -53,7 +69,7 @@
           </div>
         </article>
 
-        <article class="book-card">
+<article class="book-card" data-title="o pequeno principe" data-author="antoine de saint-exupery" data-category="aventura">
           <div class="book-cover book-cover-blue" aria-hidden="true">
             <span>PA</span>
           </div>
@@ -69,7 +85,7 @@
           </div>
         </article>
 
-        <article class="book-card">
+<article class="book-card" data-title="harry potter e a pedra filosofal" data-author="j. k. rowling" data-category="fantasia">
           <div class="book-cover book-cover-gold" aria-hidden="true">
             <span>HP</span>
           </div>
@@ -85,7 +101,7 @@
           </div>
         </article>
 
-        <article class="book-card">
+<article class="book-card" data-title="quarto de despejo" data-author="carolina maria de jesus" data-category="memorias">
           <div class="book-cover book-cover-green" aria-hidden="true">
             <span>QD</span>
           </div>
@@ -101,7 +117,7 @@
           </div>
         </article>
 
-        <article class="book-card">
+<article class="book-card" data-title="breve historia do tempo" data-author="stephen hawking" data-category="ciencias">
           <div class="book-cover book-cover-red" aria-hidden="true">
             <span>BT</span>
           </div>
@@ -117,7 +133,7 @@
           </div>
         </article>
 
-        <article class="book-card">
+<article class="book-card" data-title="o homem que calculava" data-author="malba tahan" data-category="matematica">
           <div class="book-cover book-cover-purple" aria-hidden="true">
             <span>HC</span>
           </div>
