@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="../assets/js/main.js" defer></script>
 </head>
+
 <body>
   <header class="site-header">
     <div class="container header-content">
@@ -14,7 +16,8 @@
         <span class="brand-mark" aria-hidden="true">B</span>
         <span>Biblioteca Escolar</span>
       </a>
-      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="primary-menu"><span></span><span></span><span></span></button>
+      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false"
+        aria-controls="primary-menu"><span></span><span></span><span></span></button>
       <nav class="primary-nav" id="primary-menu" aria-label="Menu principal">
         <a href="../index.html">Início</a>
         <a href="catalogo.html">Catálogo</a>
@@ -35,18 +38,13 @@
       </div>
     </section>
 
-<section class="section">
+    <section class="section">
       <div class="container">
         <div class="search-bar" role="search">
           <label class="search-label" for="search-input">Pesquisar no acervo</label>
           <div class="search-controls">
-            <input
-              id="search-input"
-              class="search-input"
-              type="search"
-              placeholder="Busque por título, autor ou categoria..."
-              autocomplete="off"
-            >
+            <input id="search-input" class="search-input" type="search"
+              placeholder="Busque por título, autor ou categoria..." autocomplete="off">
             <button class="button button-primary search-clear" type="button" aria-label="Limpar busca">Limpar</button>
           </div>
           <p class="search-results-info" id="search-results-info" aria-live="polite"></p>
@@ -54,101 +52,113 @@
 
         <div class="book-grid" id="book-grid">
           <article class="book-card" data-title="dom casmurro" data-author="machado de assis" data-category="romance">
-          <div class="book-cover" aria-hidden="true">
-            <span>DB</span>
-          </div>
-          <div class="book-content">
-            <div class="book-card-header">
-              <p class="book-category">Romance</p>
-              <span class="availability is-available">Disponível</span>
+            <div class="book-cover" aria-hidden="true">
+              <img src="../assets/images/dom-casmurro.jpg" alt="Capa de Dom Casmurro">
             </div>
-            <h2>Dom Casmurro</h2>
-            <p class="book-author">Machado de Assis</p>
-            <p class="book-description">Clássico da literatura brasileira indicado para estudos de narrativa, memória e realismo.</p>
-            <a class="button button-primary" href="detalhes.html?id=1">Ver detalhes</a>
-          </div>
-        </article>
+            <div class="book-content">
+              <div class="book-card-header">
+                <p class="book-category">Romance</p>
+                <span class="availability is-available">Disponível</span>
+              </div>
+              <h2>Dom Casmurro</h2>
+              <p class="book-author">Machado de Assis</p>
+              <p class="book-description">Clássico da literatura brasileira indicado para estudos de narrativa, memória
+                e realismo.</p>
+              <a class="button button-primary" href="detalhes.html?id=1">Ver detalhes</a>
+            </div>
+          </article>
 
-<article class="book-card" data-title="o pequeno principe" data-author="antoine de saint-exupery" data-category="aventura">
-          <div class="book-cover book-cover-blue" aria-hidden="true">
-            <span>PA</span>
-          </div>
-          <div class="book-content">
-            <div class="book-card-header">
-              <p class="book-category">Aventura</p>
-              <span class="availability is-available">Disponível</span>
+          <article class="book-card" data-title="o pequeno principe" data-author="antoine de saint-exupery"
+            data-category="aventura">
+            <div class="book-cover book-cover-blue" aria-hidden="true">
+              <img src="../assets/images/o-pequeno-príncipe.jpg" alt="Capa de O Pequeno Principe">
             </div>
-            <h2>O Pequeno Príncipe</h2>
-            <p class="book-author">Antoine de Saint-Exupéry</p>
-            <p class="book-description">Obra poética sobre amizade, responsabilidade e descoberta, muito usada em projetos de leitura.</p>
-            <a class="button button-primary" href="detalhes.html?id=2">Ver detalhes</a>
-          </div>
-        </article>
+            <div class="book-content">
+              <div class="book-card-header">
+                <p class="book-category">Aventura</p>
+                <span class="availability is-available">Disponível</span>
+              </div>
+              <h2>O Pequeno Príncipe</h2>
+              <p class="book-author">Antoine de Saint-Exupéry</p>
+              <p class="book-description">Obra poética sobre amizade, responsabilidade e descoberta, muito usada em
+                projetos de leitura.</p>
+              <a class="button button-primary" href="detalhes.html?id=2">Ver detalhes</a>
+            </div>
+          </article>
 
-<article class="book-card" data-title="harry potter e a pedra filosofal" data-author="j. k. rowling" data-category="fantasia">
-          <div class="book-cover book-cover-gold" aria-hidden="true">
-            <span>HP</span>
-          </div>
-          <div class="book-content">
-            <div class="book-card-header">
-              <p class="book-category">Fantasia</p>
-              <span class="availability is-unavailable">Indisponível</span>
+          <article class="book-card" data-title="harry potter e a pedra filosofal" data-author="j. k. rowling"
+            data-category="fantasia">
+            <div class="book-cover book-cover-gold" aria-hidden="true">
+              <img src="../assets/images/harry-potter-e-a-pedra-filosofal.jpg"
+                alt=" Capa de Harry Potter e a Pedra Filosofal">
             </div>
-            <h2>Harry Potter e a Pedra Filosofal</h2>
-            <p class="book-author">J. K. Rowling</p>
-            <p class="book-description">Primeiro volume da série, com foco em jornada, amizade e construção de mundo fantástico.</p>
-            <a class="button button-secondary-muted" href="detalhes.html?id=3">Ver detalhes</a>
-          </div>
-        </article>
+            <div class="book-content">
+              <div class="book-card-header">
+                <p class="book-category">Fantasia</p>
+                <span class="availability is-unavailable">Indisponível</span>
+              </div>
+              <h2>Harry Potter e a Pedra Filosofal</h2>
+              <p class="book-author">J. K. Rowling</p>
+              <p class="book-description">Primeiro volume da série, com foco em jornada, amizade e construção de mundo
+                fantástico.</p>
+              <a class="button button-secondary-muted" href="detalhes.html?id=3">Ver detalhes</a>
+            </div>
+          </article>
 
-<article class="book-card" data-title="quarto de despejo" data-author="carolina maria de jesus" data-category="memorias">
-          <div class="book-cover book-cover-green" aria-hidden="true">
-            <span>QD</span>
-          </div>
-          <div class="book-content">
-            <div class="book-card-header">
-              <p class="book-category">Memórias</p>
-              <span class="availability is-available">Disponível</span>
+          <article class="book-card" data-title="quarto de despejo" data-author="carolina maria de jesus"
+            data-category="memorias">
+            <div class="book-cover book-cover-green" aria-hidden="true">
+              <img src="../assets/images/quarto-de-despejo.jpg" alt="Capa de Quarto de Despejo">
             </div>
-            <h2>Quarto de Despejo</h2>
-            <p class="book-author">Carolina Maria de Jesus</p>
-            <p class="book-description">Relato importante para debates sobre sociedade, desigualdade, linguagem e cidadania.</p>
-            <a class="button button-primary" href="detalhes.html?id=4">Ver detalhes</a>
-          </div>
-        </article>
+            <div class="book-content">
+              <div class="book-card-header">
+                <p class="book-category">Memórias</p>
+                <span class="availability is-available">Disponível</span>
+              </div>
+              <h2>Quarto de Despejo</h2>
+              <p class="book-author">Carolina Maria de Jesus</p>
+              <p class="book-description">Relato importante para debates sobre sociedade, desigualdade, linguagem e
+                cidadania.</p>
+              <a class="button button-primary" href="detalhes.html?id=4">Ver detalhes</a>
+            </div>
+          </article>
 
-<article class="book-card" data-title="breve historia do tempo" data-author="stephen hawking" data-category="ciencias">
-          <div class="book-cover book-cover-red" aria-hidden="true">
-            <span>BT</span>
-          </div>
-          <div class="book-content">
-            <div class="book-card-header">
-              <p class="book-category">Ciências</p>
-              <span class="availability is-reserved">Reservado</span>
+          <article class="book-card" data-title="breve historia do tempo" data-author="stephen hawking"
+            data-category="ciencias">
+            <div class="book-cover book-cover-red" aria-hidden="true">
+              <img src="../assets/images/uma-breve-historia-do-tempo.jpg" alt="Capa de Uma Breve História do Tempo">
             </div>
-            <h2>Breve História do Tempo</h2>
-            <p class="book-author">Stephen Hawking</p>
-            <p class="book-description">Introdução acessível a temas como universo, tempo, gravidade e pensamento científico.</p>
-            <a class="button button-secondary-muted" href="detalhes.html?id=5">Ver detalhes</a>
-          </div>
-        </article>
+            <div class="book-content">
+              <div class="book-card-header">
+                <p class="book-category">Ciências</p>
+                <span class="availability is-reserved">Reservado</span>
+              </div>
+              <h2>Breve História do Tempo</h2>
+              <p class="book-author">Stephen Hawking</p>
+              <p class="book-description">Introdução acessível a temas como universo, tempo, gravidade e pensamento
+                científico.</p>
+              <a class="button button-secondary-muted" href="detalhes.html?id=5">Ver detalhes</a>
+            </div>
+          </article>
 
-<article class="book-card" data-title="o homem que calculava" data-author="malba tahan" data-category="matematica">
-          <div class="book-cover book-cover-purple" aria-hidden="true">
-            <span>HC</span>
-          </div>
-          <div class="book-content">
-            <div class="book-card-header">
-              <p class="book-category">Matemática</p>
-              <span class="availability is-available">Disponível</span>
+          <article class="book-card" data-title="o homem que calculava" data-author="malba tahan"
+            data-category="matematica">
+            <div class="book-cover book-cover-purple" aria-hidden="true">
+              <img src="../assets/images/o-homem-que-calculava.jpg" alt="Capa de O Homem Que Calculava">
             </div>
-            <h2>O Homem que Calculava</h2>
-            <p class="book-author">Malba Tahan</p>
-            <p class="book-description">Narrativas com desafios matemáticos que aproximam lógica, cultura e resolução de problemas.</p>
-            <a class="button button-primary" href="detalhes.html?id=6">Ver detalhes</a>
-          </div>
-        </article>
-      </div>
+            <div class="book-content">
+              <div class="book-card-header">
+                <p class="book-category">Matemática</p>
+                <span class="availability is-available">Disponível</span>
+              </div>
+              <h2>O Homem que Calculava</h2>
+              <p class="book-author">Malba Tahan</p>
+              <p class="book-description">Narrativas com desafios matemáticos que aproximam lógica, cultura e resolução
+                de problemas.</p>
+              <a class="button button-primary" href="detalhes.html?id=6">Ver detalhes</a>
+            </div>
+          </article>
+        </div>
     </section>
   </main>
 
@@ -159,4 +169,5 @@
     </div>
   </footer>
 </body>
+
 </html>
