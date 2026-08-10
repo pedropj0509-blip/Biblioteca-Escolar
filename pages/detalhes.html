@@ -21,15 +21,61 @@
   <main>
     <section class="page-title">
       <div class="container">
-        <p class="section-kicker">Livro</p>
-        <h1>Detalhes do livro</h1>
-        <p>Modelo base para exibir capa, autor, categoria, ISBN, ano, disponibilidade e descrição.</p>
+        <p class="section-kicker">Acervo</p>
+        <h1 id="book-title">Detalhes do livro</h1>
+        <p id="book-author" class="page-title-author">Autor</p>
       </div>
     </section>
+
     <section class="section">
-      <div class="container page-grid two-columns">
-        <article class="content-panel"><h2>Informações principais</h2><ul class="placeholder-list"><li>Capa</li><li>Autor</li><li>Categoria</li><li>Editora</li></ul></article>
-        <article class="content-panel"><h2>Disponibilidade</h2><ul class="placeholder-list"><li>ISBN</li><li>Ano</li><li>Status</li><li>Descrição</li></ul></article>
+      <div class="container">
+        <div class="book-details-grid">
+          <!-- Coluna 1: Capa e disponibilidade -->
+          <aside class="book-details-sidebar">
+            <div class="book-cover-detail"></div>
+            <div class="book-details-status">
+              <span class="availability" id="book-availability">Disponível</span>
+              <button class="button button-primary" id="reserve-button" type="button">
+                Reservar livro
+              </button>
+              <a class="button button-secondary-muted" href="catalogo.html" style="text-align: center;">
+                Voltar ao catálogo
+              </a>
+            </div>
+          </aside>
+
+          <!-- Coluna 2: Informações detalhadas -->
+          <article class="book-details-content">
+            <section class="details-section">
+              <h2>Informações principais</h2>
+              <dl class="details-list">
+                <dt>Autor</dt>
+                <dd id="book-author-detail">—</dd>
+                <dt>Categoria</dt>
+                <dd id="book-category">—</dd>
+                <dt>Editora</dt>
+                <dd id="book-publisher">—</dd>
+                <dt>Ano de publicação</dt>
+                <dd id="book-year">—</dd>
+              </dl>
+            </section>
+
+            <section class="details-section">
+              <h2>Identificação</h2>
+              <dl class="details-list">
+                <dt>ISBN</dt>
+                <dd id="book-isbn">—</dd>
+              </dl>
+            </section>
+
+            <section class="details-section">
+              <h2>Sobre o livro</h2>
+              <p id="book-description" class="book-full-description">
+                Descrição não disponível.
+              </p>
+            </section>
+          </article>
+        </div>
       </div>
     </section>
   </main>

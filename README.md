@@ -4,7 +4,7 @@ Projeto web para gerenciamento de uma biblioteca escolar, desenvolvido para fins
 
 ## Status
 
-Fase atual: **Fase 3 - Catálogo**
+Fase atual: **Fase 5 - Página de Detalhes**
 
 Entregáveis da fase:
 
@@ -19,6 +19,8 @@ Entregáveis da fase:
 - Cards de livros no catálogo
 - Exibição de disponibilidade dos livros
 - Layout responsivo para listagem do acervo
+- Barra de pesquisa funcional com filtro por título, autor e categoria
+- Página de detalhes do livro com informações completas (capa, autor, categoria, editora, ISBN, ano, disponibilidade, descrição)
 
 ## Escopo
 
