@@ -361,6 +361,70 @@ function renderNavUser() {
   }
 }
 
+function renderHome() {
+  const user = getAuthenticatedUser();
+  const hero = document.querySelector('.hero');
+
+  if (!hero) return;
+  const featured = booksDatabase.slice(0, 3).map((b) => {
+    const stock = getBookCurrentStock(b.id);
+    const badge = stock > 0 ? (stock === 1 ? 'Última cópia' : 'Disponível') : 'Sem estoque';
+    const imgSrc = b.coverImage ? (b.coverImage.startsWith('../') ? b.coverImage.replace(/^\.\.\//, '') : b.coverImage) : null;
+    return `
+      <article class="featured-book-card">
+        <div class="cover-small">${imgSrc ? `<img src="${imgSrc}" alt="Capa de ${b.title}">` : `<span>${b.cover}</span>`}</div>
+        <div class="featured-body">
+          <strong class="featured-title">${b.title}</strong>
+          <span class="featured-author">${b.author}</span>
+          <span class="featured-badge">${badge}</span>
+        </div>
+      </article>`;
+  }).join('');
+
+  const initials = user ? getUserInitials(user.name) : '';
+
+  hero.innerHTML = `
+    <div class="container hero-content hero-grid">
+      <div class="hero-main">
+        <p class="section-kicker">Biblioteca Virtual Escolar</p>
+        <h1>${user ? `Olá, ${user.name.split(' ')[0]}!` : 'Consulta, reserva e gestão do acervo em um só lugar.'}</h1>
+        <p class="hero-text">${user ? 'Acesse rapidamente seu perfil, reservas e o catálogo.' : 'Uma base simples e organizada para alunos, professores e administradores acessarem livros e reservas.'}</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="pages/catalogo.html">Ver catálogo</a>
+          ${user ? '<a class="button button-secondary" href="pages/reservas.html">Minhas reservas</a>' : '<a class="button button-secondary" href="pages/cadastro.html">Criar conta</a>'}
+        </div>
+        <div class="hero-features">
+          ${featured}
+        </div>
+      </div>
+      <aside class="hero-side">
+        ${user ? `
+          <div class="hero-user-card">
+            <div class="profile-avatar large">${initials}</div>
+            <div class="hero-user-meta">
+              <strong>${user.name}</strong>
+              <span class="hero-user-role">${user.role === 'teacher' ? 'Professor' : 'Aluno'}</span>
+              <div class="hero-side-actions">
+                <a class="button button-secondary" href="pages/perfil.html">Meu perfil</a>
+                <a class="button button-primary" href="pages/reservas.html">Minhas reservas</a>
+              </div>
+            </div>
+          </div>
+        ` : `
+          <div class="signup-promo content-panel">
+            <h3>Crie sua conta</h3>
+            <p>Cadastre-se para reservar livros e acompanhar suas leituras.</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="pages/cadastro.html">Cadastrar</a>
+              <a class="button button-secondary" href="pages/login.html">Entrar</a>
+            </div>
+          </div>
+        `}
+      </aside>
+    </div>
+  `;
+}
+
 function showMessage(elementId, message, isError = false) {
   const element = document.querySelector(`#${elementId}`);
 
@@ -480,14 +544,12 @@ function handleReserveButton(event) {
 
 function renderReservationsPage() {
   const user = getAuthenticatedUser();
-  const reservationsContent = document.querySelector('#reservations-content');
+  const container = document.querySelector('#reservations-content');
 
-  if (!reservationsContent) {
-    return;
-  }
+  if (!container) return;
 
   if (!user) {
-    reservationsContent.innerHTML = `
+    container.innerHTML = `
       <h2>Minhas reservas</h2>
       <p>Para ver suas reservas, faça login no sistema.</p>
       <div class="auth-actions">
@@ -498,58 +560,77 @@ function renderReservationsPage() {
     return;
   }
 
-  const activeReservations = getUserReservations(user.id);
-  const historyReservations = getUserReservationHistory(user.id);
+  const active = getUserReservations(user.id);
+  const history = getUserReservationHistory(user.id).filter(r => r.status !== 'Ativa');
 
-  const reservationItems = activeReservations.length
-    ? activeReservations
-        .map(
-          (reservation) => `
-            <li>
-              <strong>${reservation.title}</strong><br>
-              Reservado em: ${new Date(reservation.reservedAt).toLocaleDateString('pt-BR')}<br>
-              Status: ${reservation.status}
-              <button class="button button-secondary cancel-reservation-button" type="button" data-reservation-id="${reservation.id}">Cancelar</button>
-            </li>
-          `
-        )
-        .join('')
-    : '<li>Você não tem reservas ativas no momento.</li>';
+  if (active.length === 0 && history.length === 0) {
+    container.innerHTML = `
+      <h2>Minhas reservas</h2>
+      <p>Você ainda não fez reservas. Explore o catálogo e reserve os livros que desejar.</p>
+      <div class="hero-actions"><a class="button button-primary" href="catalogo.html">Ver catálogo</a></div>
+    `;
+    return;
+  }
 
-  const historyItems = historyReservations.length
-    ? historyReservations
-        .map(
-          (reservation) => `
-            <li>
-              <strong>${reservation.title}</strong><br>
-              Reservado em: ${new Date(reservation.reservedAt).toLocaleDateString('pt-BR')}<br>
-              Status: ${reservation.status}
-            </li>
-          `
-        )
-        .join('')
-    : '<li>Sem histórico de reservas.</li>';
+  const activeHtml = active
+    .map(res => {
+      const book = getBookById(res.bookId) || {};
+      return `
+        <article class="reservation-card" data-reservation-id="${res.id}">
+          <div class="card-cover">
+            ${book.coverImage ? `<img src="${book.coverImage}" alt="Capa de ${book.title}">` : `<div class="cover-placeholder">${book.cover || 'Livro'}</div>`}
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">${book.title || res.title}</h3>
+            <p class="card-meta">${book.author || ''}</p>
+            <p class="card-info">Reservado em: ${new Date(res.reservedAt).toLocaleDateString('pt-BR')}</p>
+            <p class="card-status">Status: <strong>${res.status}</strong></p>
+            <div class="card-actions">
+              <button class="button button-secondary cancel-reservation-button" data-reservation-id="${res.id}" type="button">Cancelar reserva</button>
+            </div>
+          </div>
+        </article>
+      `;
+    })
+    .join('');
 
-  reservationsContent.innerHTML = `
+  const historyHtml = history
+    .map(res => {
+      const book = getBookById(res.bookId) || {};
+      return `
+        <article class="reservation-card muted">
+          <div class="card-cover">
+            ${book.coverImage ? `<img src="${book.coverImage}" alt="Capa de ${book.title}">` : `<div class="cover-placeholder">${book.cover || 'Livro'}</div>`}
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">${book.title || res.title}</h3>
+            <p class="card-meta">${book.author || ''}</p>
+            <p class="card-info">Reservado em: ${new Date(res.reservedAt).toLocaleDateString('pt-BR')}</p>
+            <p class="card-status">Status: ${res.status}</p>
+          </div>
+        </article>
+      `;
+    })
+    .join('');
+
+  container.innerHTML = `
     <h2>Minhas reservas</h2>
-    <p>Olá, ${user.name}. Veja abaixo suas reservas e histórico.</p>
-    <div class="reservation-section">
+    <p>Olá, ${user.name}. Gerencie suas reservas abaixo.</p>
+    <section class="reservation-list">
       <h3>Reservas ativas</h3>
-      <ul class="placeholder-list">${reservationItems}</ul>
-    </div>
-    <div class="reservation-section">
-      <h3>Histórico de reservas</h3>
-      <ul class="placeholder-list">${historyItems}</ul>
-    </div>
+      <div class="reservation-grid">${activeHtml || '<p>Nenhuma reserva ativa.</p>'}</div>
+    </section>
+    <section class="reservation-list">
+      <h3>Histórico</h3>
+      <div class="reservation-grid">${historyHtml || '<p>Sem histórico de reservas.</p>'}</div>
+    </section>
   `;
 
-  const cancelButtons = document.querySelectorAll('.cancel-reservation-button');
-  cancelButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const reservationId = parseInt(button.dataset.reservationId, 10);
-      cancelReservation(reservationId);
-    });
-  });
+  const cancelButtons = container.querySelectorAll('.cancel-reservation-button');
+  cancelButtons.forEach(btn => btn.addEventListener('click', (e) => {
+    const id = parseInt(e.currentTarget.dataset.reservationId, 10);
+    cancelReservation(id);
+  }));
 }
 
 function handleSignupFormSubmit(event) {
@@ -588,7 +669,34 @@ function handleSignupFormSubmit(event) {
 
   showMessage('signup-message', 'Cadastro realizado com sucesso! Redirecionando...', false);
   setTimeout(() => {
-    window.location.href = 'perfil.html';
+    window.location.href = '../index.html';
+  }, 800);
+}
+
+function handleLoginFormSubmit(event) {
+  event.preventDefault();
+
+  const email = document.querySelector('#email')?.value.trim();
+  const password = document.querySelector('#senha')?.value.trim();
+
+  if (!email || !password) {
+    showMessage('login-message', 'Preencha e-mail e senha.', true);
+    return;
+  }
+
+  const user = getAllUsers().find(
+    (account) => account.email.toLowerCase() === email.toLowerCase() && account.password === password
+  );
+
+  if (!user) {
+    showMessage('login-message', 'E-mail ou senha incorretos.', true);
+    return;
+  }
+
+  setAuthenticatedUser({ id: user.id, name: user.name, email: user.email, role: user.role });
+  showMessage('login-message', 'Login realizado com sucesso! Redirecionando...', false);
+  setTimeout(() => {
+    window.location.href = '../index.html';
   }, 800);
 }
 
@@ -703,6 +811,10 @@ window.addEventListener('DOMContentLoaded', () => {
   renderNavUser();
   if (window.location.pathname.includes('catalogo.html')) {
     syncCatalogBookCards();
+  }
+  const page = window.location.pathname.split('/').pop();
+  if (page === '' || page === 'index.html') {
+    renderHome();
   }
 });
 
