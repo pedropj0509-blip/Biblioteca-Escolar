@@ -4,7 +4,9 @@ Projeto web para gerenciamento de uma biblioteca escolar, desenvolvido para fins
 
 ## Status
 
-Fase atual: **Fase 5 - Página de Detalhes**
+Fase atual: **Fase 7 - Reservas e Estoque (implementado)**
+
+Observações: Autenticação mock, reserva de livros com controle de estoque e página de reservas repaginada foram implementadas. A home também foi personalizada para usuários autenticados.
 
 Entregáveis da fase:
 
