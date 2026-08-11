@@ -88,6 +88,7 @@ const booksDatabase = [
     available: true,
     cover: "DB",
     coverClass: "",
+    coverImage: "../assets/images/dom-casmurro.jpg",
     description: "Clássico da literatura brasileira indicado para estudos de narrativa, memória e realismo. Bentinho narra a história de seu relacionamento com Capitu, misturando passado e presente em uma reflexão profunda sobre ciúmes, traição e memória. Obra fundamental para compreender a psicologia dos personagens e a estrutura narrativa do realismo brasileiro."
   },
   {
@@ -101,6 +102,7 @@ const booksDatabase = [
     available: true,
     cover: "PA",
     coverClass: "book-cover-blue",
+    coverImage: "../assets/images/o-pequeno-príncipe.jpg",
     description: "Obra poética sobre amizade, responsabilidade e descoberta, muito usada em projetos de leitura escolar. O pequeno príncipe viaja por diversos planetas em busca de respostas sobre a vida, o amor e a morte, oferecendo uma visão profunda sobre valores humanos de forma leve e poética."
   },
   {
@@ -114,6 +116,7 @@ const booksDatabase = [
     available: false,
     cover: "HP",
     coverClass: "book-cover-gold",
+    coverImage: "../assets/images/harry-potter-e-a-pedra-filosofal.jpg",
     description: "Primeiro volume da série, com foco em jornada, amizade e construção de mundo fantástico. Harry Potter descobre que é um bruxo e é convidado a estudar em Hogwarts, onde faz amigos e enfrenta mistérios que o levarão a confrontar forças do mal. Obra essencial para leitura juvenil com temática de aventura e crescimento pessoal."
   },
   {
@@ -127,6 +130,7 @@ const booksDatabase = [
     available: true,
     cover: "QD",
     coverClass: "book-cover-green",
+    coverImage: "../assets/images/quarto-de-despejo.jpg",
     description: "Relato importante para debates sobre sociedade, desigualdade, linguagem e cidadania. O livro é composto por trechos do diário de Carolina Maria de Jesus, uma mulher negra moradora de uma favela em São Paulo, registrando sua luta pela sobrevivência e suas reflexões sobre a vida, o preconceito e a esperança."
   },
   {
@@ -140,6 +144,7 @@ const booksDatabase = [
     available: false,
     cover: "BT",
     coverClass: "book-cover-red",
+    coverImage: "../assets/images/uma-breve-historia-do-tempo.jpg",
     description: "Introdução acessível a temas como universo, tempo, gravidade e pensamento científico. Stephen Hawking, um dos maiores físicos modernos, explica conceitos complexos da cosmologia e da física quântica de forma que leigos possam compreender, abordando desde o Big Bang até os buracos negros."
   },
   {
@@ -153,6 +158,7 @@ const booksDatabase = [
     available: true,
     cover: "HC",
     coverClass: "book-cover-purple",
+    coverImage: "../assets/images/o-homem-que-calculava.jpg",
     description: "Narrativas com desafios matemáticos que aproximam lógica, cultura e resolução de problemas. O livro segue Beremiz Samir, um jovem calculista persa, em suas aventuras resolvendo problemas matemáticos e enigmas ao longo de sua jornada, demonstrando como a matemática está presente em situações cotidianas."
   }
 ];
@@ -191,8 +197,13 @@ function loadBookDetails() {
   const reserveButton = document.querySelector('#reserve-button');
   
   if (bookCover) {
-    bookCover.className = `book-cover-detail ${book.coverClass}`;
-    bookCover.innerHTML = `<span>${book.cover}</span>`;
+    if (book.coverImage) {
+      bookCover.className = 'book-cover-detail has-cover-image';
+      bookCover.innerHTML = `<img src="${book.coverImage}" alt="Capa de ${book.title}">`;
+    } else {
+      bookCover.className = `book-cover-detail ${book.coverClass}`;
+      bookCover.innerHTML = `<span>${book.cover}</span>`;
+    }
   }
   
   if (bookTitle) bookTitle.textContent = book.title;
