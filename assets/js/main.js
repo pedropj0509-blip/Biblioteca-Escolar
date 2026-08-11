@@ -235,9 +235,311 @@ function loadBookDetails() {
   }
 }
 
+const AUTH_STORAGE_KEY = 'biblioteca-auth-user';
+const REGISTERED_USERS_KEY = 'biblioteca-registered-users';
+
+const mockUsers = [
+  {
+    id: 1,
+    name: 'Aluno Exemplo',
+    email: 'aluno@escola.com',
+    password: '123456',
+    role: 'student'
+  },
+  {
+    id: 2,
+    name: 'Professora Exemplo',
+    email: 'professora@escola.com',
+    password: '123456',
+    role: 'teacher'
+  }
+];
+
+function getStoredUsers() {
+  const savedUsers = localStorage.getItem(REGISTERED_USERS_KEY);
+  return savedUsers ? JSON.parse(savedUsers) : [];
+}
+
+function saveStoredUsers(users) {
+  localStorage.setItem(REGISTERED_USERS_KEY, JSON.stringify(users));
+}
+
+function getAllUsers() {
+  return [...mockUsers, ...getStoredUsers()];
+}
+
+function getAuthenticatedUser() {
+  const userData = localStorage.getItem(AUTH_STORAGE_KEY);
+  return userData ? JSON.parse(userData) : null;
+}
+
+function setAuthenticatedUser(user) {
+  localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+}
+
+function getUserInitials(name) {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(word => word[0].toUpperCase())
+    .join('');
+}
+
+function clearAuthentication() {
+  localStorage.removeItem(AUTH_STORAGE_KEY);
+}
+
+function renderNavUser() {
+  const user = getAuthenticatedUser();
+  const loginLink = document.querySelector('.primary-nav .nav-action');
+
+  if (!loginLink) {
+    return;
+  }
+
+  if (user) {
+    loginLink.textContent = user.name;
+    loginLink.href = 'perfil.html';
+    loginLink.setAttribute('aria-label', `Perfil de ${user.name}`);
+    loginLink.classList.add('nav-user');
+  } else {
+    loginLink.textContent = 'Entrar';
+    loginLink.href = 'login.html';
+    loginLink.setAttribute('aria-label', 'Entrar');
+    loginLink.classList.remove('nav-user');
+  }
+}
+
+function showMessage(elementId, message, isError = false) {
+  const element = document.querySelector(`#${elementId}`);
+
+  if (!element) {
+    return;
+  }
+
+  element.textContent = message;
+  element.className = `form-message ${isError ? 'error' : 'success'}`;
+}
+
+function handleLoginFormSubmit(event) {
+  event.preventDefault();
+
+  const email = document.querySelector('#email')?.value.trim();
+  const password = document.querySelector('#senha')?.value.trim();
+
+  if (!email || !password) {
+    showMessage('login-message', 'Preencha e-mail e senha.', true);
+    return;
+  }
+
+  const user = getAllUsers().find(
+    (account) => account.email.toLowerCase() === email.toLowerCase() && account.password === password
+  );
+
+  if (!user) {
+    showMessage('login-message', 'E-mail ou senha incorretos.', true);
+    return;
+  }
+
+  setAuthenticatedUser({ id: user.id, name: user.name, email: user.email, role: user.role });
+  showMessage('login-message', 'Login realizado com sucesso! Redirecionando...', false);
+  setTimeout(() => {
+    window.location.href = 'perfil.html';
+  }, 800);
+}
+
+function handleSignupFormSubmit(event) {
+  event.preventDefault();
+
+  const name = document.querySelector('#nome')?.value.trim();
+  const email = document.querySelector('#email')?.value.trim();
+  const password = document.querySelector('#senha')?.value.trim();
+
+  if (!name || !email || !password) {
+    showMessage('signup-message', 'Preencha todos os campos.', true);
+    return;
+  }
+
+  const existingUser = getAllUsers().find(
+    (account) => account.email.toLowerCase() === email.toLowerCase()
+  );
+
+  if (existingUser) {
+    showMessage('signup-message', 'Este e-mail já está em uso.', true);
+    return;
+  }
+
+  const storedUsers = getStoredUsers();
+  const newUser = {
+    id: Date.now(),
+    name,
+    email,
+    password,
+    role: 'student'
+  };
+
+  storedUsers.push(newUser);
+  saveStoredUsers(storedUsers);
+  setAuthenticatedUser({ id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role });
+
+  showMessage('signup-message', 'Cadastro realizado com sucesso! Redirecionando...', false);
+  setTimeout(() => {
+    window.location.href = 'perfil.html';
+  }, 800);
+}
+
+function renderProfilePage() {
+  const user = getAuthenticatedUser();
+  const profileInfo = document.querySelector('#profile-info');
+  const profileActions = document.querySelector('#profile-actions');
+
+  if (!profileInfo || !profileActions) {
+    return;
+  }
+
+  if (!user) {
+    profileInfo.innerHTML = `
+      <div class="profile-summary">
+        <div class="profile-card">
+          <div class="profile-avatar">?</div>
+          <div>
+            <h2>Você não está autenticado</h2>
+            <p>Faça login ou cadastre-se para acessar sua área.</p>
+          </div>
+        </div>
+      </div>
+    `;
+    profileActions.innerHTML = `
+      <a class="button button-primary" href="login.html">Entrar</a>
+      <a class="button button-secondary" href="cadastro.html">Cadastrar</a>
+    `;
+    return;
+  }
+
+  const initials = getUserInitials(user.name);
+  const roleLabel = user.role === 'teacher' ? 'Professor' : 'Aluno';
+
+  profileInfo.innerHTML = `
+    <div class="profile-summary">
+      <div class="profile-card">
+        <div class="profile-avatar" aria-hidden="true">${initials}</div>
+        <div class="profile-details">
+          <p class="profile-role">${roleLabel}</p>
+          <h2>${user.name}</h2>
+          <p>${user.email}</p>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <article class="profile-metric">
+          <p class="metric-label">Reservas ativas</p>
+          <strong>2</strong>
+        </article>
+        <article class="profile-metric">
+          <p class="metric-label">Livros lidos</p>
+          <strong>14</strong>
+        </article>
+        <article class="profile-metric">
+          <p class="metric-label">Próxima entrega</p>
+          <strong>20 ago</strong>
+        </article>
+      </div>
+    </div>
+    <div class="profile-details-panel">
+      <h3>Sobre sua conta</h3>
+      <dl class="details-list">
+        <dt>Nome</dt>
+        <dd>${user.name}</dd>
+        <dt>E-mail</dt>
+        <dd>${user.email}</dd>
+        <dt>Função</dt>
+        <dd>${roleLabel}</dd>
+        <dt>Membro desde</dt>
+        <dd>Junho de 2026</dd>
+      </dl>
+    </div>
+  `;
+  profileActions.innerHTML = `
+    <a class="button button-secondary" href="catalogo.html">Ver catálogo</a>
+    <a class="button button-secondary" href="reservas.html">Minhas reservas</a>
+    <button class="button button-primary" id="logout-button" type="button">Sair</button>
+  `;
+
+  const logoutButton = document.querySelector('#logout-button');
+  if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+      clearAuthentication();
+      window.location.href = 'login.html';
+    });
+  }
+}
+
+function renderReservationsPage() {
+  const user = getAuthenticatedUser();
+  const reservationsContent = document.querySelector('#reservations-content');
+
+  if (!reservationsContent) {
+    return;
+  }
+
+  if (!user) {
+    reservationsContent.innerHTML = `
+      <h2>Minhas reservas</h2>
+      <p>Para ver suas reservas, faça login no sistema.</p>
+      <div class="auth-actions">
+        <a class="button button-primary" href="login.html">Entrar</a>
+        <a class="button button-secondary" href="cadastro.html">Cadastrar</a>
+      </div>
+    `;
+    return;
+  }
+
+  const mockReservations = [
+    { title: 'Dom Casmurro', status: 'Ativa', dueDate: '2026-08-20' },
+    { title: 'O Pequeno Príncipe', status: 'Pendente', dueDate: '2026-09-02' }
+  ];
+
+  const reservationList = mockReservations
+    .map(
+      (reservation) => `
+        <li>
+          <strong>${reservation.title}</strong><br>
+          Status: ${reservation.status} • Devolução: ${reservation.dueDate}
+        </li>
+      `
+    )
+    .join('');
+
+  reservationsContent.innerHTML = `
+    <h2>Minhas reservas</h2>
+    <p>Olá, ${user.name}. Aqui estão suas reservas simuladas.</p>
+    <ul class="placeholder-list">${reservationList}</ul>
+  `;
+}
+
+if (document.querySelector('#login-form')) {
+  document.querySelector('#login-form')?.addEventListener('submit', handleLoginFormSubmit);
+}
+
+if (document.querySelector('#signup-form')) {
+  document.querySelector('#signup-form')?.addEventListener('submit', handleSignupFormSubmit);
+}
+
+if (window.location.pathname.includes('perfil.html')) {
+  document.addEventListener('DOMContentLoaded', renderProfilePage);
+}
+
+if (window.location.pathname.includes('reservas.html')) {
+  document.addEventListener('DOMContentLoaded', renderReservationsPage);
+}
+
 if (document.currentScript.src.includes('main.js') && window.location.pathname.includes('detalhes.html')) {
   document.addEventListener('DOMContentLoaded', loadBookDetails);
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderNavUser();
+});
 
 // Executar também se o DOM já estiver carregado
 if (window.location.pathname.includes('detalhes.html') && document.readyState !== 'loading') {

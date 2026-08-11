@@ -125,9 +125,10 @@ biblioteca-virtual/
 
 ### Fase 6 — Autenticação
 
-- Login
-- Cadastro
+- Login (mockado)
+- Cadastro (mockado)
 - Logout
+- Autenticação simulada usando localStorage
 
 ### Fase 7 — Sistema de Reservas
 
@@ -192,9 +193,9 @@ Adequação da interface para:
 | Alta | Página inicial | Concluído |
 | Alta | Catálogo | Concluído |
 | Alta | Pesquisa | Concluído |
-| Alta | Detalhes do livro | - |
-| Alta | Login | - |
-| Alta | Cadastro | - |
+| Alta | Detalhes do livro | Concluído |
+| Alta | Login | Concluído |
+| Alta | Cadastro | Concluído |
 | Alta | Reservas | - |
 | Média | Área do usuário | - |
 | Média | Painel administrativo | - |
