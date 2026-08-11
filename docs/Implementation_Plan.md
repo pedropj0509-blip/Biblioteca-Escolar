@@ -196,7 +196,7 @@ Adequação da interface para:
 | Alta | Detalhes do livro | Concluído |
 | Alta | Login | Concluído |
 | Alta | Cadastro | Concluído |
-| Alta | Reservas | - |
+| Alta | Reservas | Concluído |
 | Média | Área do usuário | - |
 | Média | Painel administrativo | - |
 | Média | Responsividade | - |

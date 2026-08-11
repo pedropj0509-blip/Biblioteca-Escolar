@@ -85,7 +85,7 @@ const booksDatabase = [
     publisher: "Globo Livros",
     isbn: "978-8535937299",
     year: 1899,
-    available: true,
+    stock: 5,
     cover: "DB",
     coverClass: "",
     coverImage: "../assets/images/dom-casmurro.jpg",
@@ -99,7 +99,7 @@ const booksDatabase = [
     publisher: "Sextante",
     isbn: "978-8532529909",
     year: 1943,
-    available: true,
+    stock: 4,
     cover: "PA",
     coverClass: "book-cover-blue",
     coverImage: "../assets/images/o-pequeno-príncipe.jpg",
@@ -113,7 +113,7 @@ const booksDatabase = [
     publisher: "Rocco",
     isbn: "978-8532530786",
     year: 1997,
-    available: false,
+    stock: 0,
     cover: "HP",
     coverClass: "book-cover-gold",
     coverImage: "../assets/images/harry-potter-e-a-pedra-filosofal.jpg",
@@ -127,7 +127,7 @@ const booksDatabase = [
     publisher: "Ática",
     isbn: "978-8508070610",
     year: 1960,
-    available: true,
+    stock: 3,
     cover: "QD",
     coverClass: "book-cover-green",
     coverImage: "../assets/images/quarto-de-despejo.jpg",
@@ -141,7 +141,7 @@ const booksDatabase = [
     publisher: "Intrínseca",
     isbn: "978-8598327839",
     year: 1988,
-    available: false,
+    stock: 1,
     cover: "BT",
     coverClass: "book-cover-red",
     coverImage: "../assets/images/uma-breve-historia-do-tempo.jpg",
@@ -155,7 +155,7 @@ const booksDatabase = [
     publisher: "Record",
     isbn: "978-8501076776",
     year: 1938,
-    available: true,
+    stock: 2,
     cover: "HC",
     coverClass: "book-cover-purple",
     coverImage: "../assets/images/o-homem-que-calculava.jpg",
@@ -193,6 +193,7 @@ function loadBookDetails() {
   const bookISBN = document.querySelector('#book-isbn');
   const bookYear = document.querySelector('#book-year');
   const bookAvailability = document.querySelector('#book-availability');
+  const stockIndicator = document.querySelector('#book-stock');
   const bookDescription = document.querySelector('#book-description');
   const reserveButton = document.querySelector('#reserve-button');
   
@@ -215,28 +216,37 @@ function loadBookDetails() {
   if (bookYear) bookYear.textContent = book.year;
   if (bookDescription) bookDescription.textContent = book.description;
   
+  const currentStock = getBookCurrentStock(bookId);
+  
   if (bookAvailability) {
-    const statusClass = book.available ? 'is-available' : 'is-unavailable';
-    const statusText = book.available ? 'Disponível' : 'Indisponível';
+    const statusClass = currentStock > 0 ? 'is-available' : 'is-unavailable';
+    const statusText = currentStock > 0 ? 'Disponível' : 'Indisponível';
     bookAvailability.className = `availability ${statusClass}`;
     bookAvailability.textContent = statusText;
   }
+
+  if (stockIndicator) {
+    stockIndicator.textContent = currentStock > 0 ? `${currentStock} cópia${currentStock === 1 ? '' : 's'} disponíveis` : 'Sem estoque';
+  }
   
   if (reserveButton) {
-    if (book.available) {
+    if (currentStock > 0) {
       reserveButton.disabled = false;
       reserveButton.textContent = 'Reservar livro';
       reserveButton.className = 'button button-primary';
+      reserveButton.onclick = () => reserveBook(parseInt(bookId, 10));
     } else {
       reserveButton.disabled = true;
       reserveButton.textContent = 'Não disponível';
       reserveButton.className = 'button button-secondary-muted';
+      reserveButton.onclick = null;
     }
   }
 }
 
 const AUTH_STORAGE_KEY = 'biblioteca-auth-user';
 const REGISTERED_USERS_KEY = 'biblioteca-registered-users';
+const RESERVATIONS_STORAGE_KEY = 'biblioteca-reservations';
 
 const mockUsers = [
   {
@@ -275,6 +285,46 @@ function getAuthenticatedUser() {
 
 function setAuthenticatedUser(user) {
   localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+}
+
+function getStoredReservations() {
+  const stored = localStorage.getItem(RESERVATIONS_STORAGE_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveReservations(reservations) {
+  localStorage.setItem(RESERVATIONS_STORAGE_KEY, JSON.stringify(reservations));
+}
+
+function getBookReservedCount(bookId) {
+  const bookIdNumber = parseInt(bookId, 10);
+  const reservations = getStoredReservations();
+  return reservations.filter(
+    (reservation) => parseInt(reservation.bookId, 10) === bookIdNumber && reservation.status === 'Ativa'
+  ).length;
+}
+
+function getBookCurrentStock(bookId) {
+  const book = getBookById(bookId);
+  if (!book) return 0;
+  const reservedCount = getBookReservedCount(bookId);
+  return Math.max(book.stock - reservedCount, 0);
+}
+
+function getBookAvailability(bookId) {
+  return getBookCurrentStock(bookId) > 0;
+}
+
+function getUserReservations(userId) {
+  return getStoredReservations().filter(
+    (reservation) => reservation.userId === userId && reservation.status === 'Ativa'
+  );
+}
+
+function getUserReservationHistory(userId) {
+  return getStoredReservations().filter(
+    (reservation) => reservation.userId === userId
+  );
 }
 
 function getUserInitials(name) {
@@ -322,31 +372,184 @@ function showMessage(elementId, message, isError = false) {
   element.className = `form-message ${isError ? 'error' : 'success'}`;
 }
 
-function handleLoginFormSubmit(event) {
-  event.preventDefault();
+function reserveBook(bookId) {
+  const user = getAuthenticatedUser();
+  const book = getBookById(bookId);
+  const reserveMessage = document.querySelector('#reserve-message');
 
-  const email = document.querySelector('#email')?.value.trim();
-  const password = document.querySelector('#senha')?.value.trim();
-
-  if (!email || !password) {
-    showMessage('login-message', 'Preencha e-mail e senha.', true);
+  if (!book || !reserveMessage) {
     return;
   }
-
-  const user = getAllUsers().find(
-    (account) => account.email.toLowerCase() === email.toLowerCase() && account.password === password
-  );
 
   if (!user) {
-    showMessage('login-message', 'E-mail ou senha incorretos.', true);
+    showMessage('reserve-message', 'Faça login para reservar este livro.', true);
     return;
   }
 
-  setAuthenticatedUser({ id: user.id, name: user.name, email: user.email, role: user.role });
-  showMessage('login-message', 'Login realizado com sucesso! Redirecionando...', false);
+  const currentStock = getBookCurrentStock(bookId);
+  if (currentStock <= 0) {
+    showMessage('reserve-message', 'Não há cópias disponíveis no momento.', true);
+    return;
+  }
+
+  const reservations = getStoredReservations();
+  const newReservation = {
+    id: Date.now(),
+    userId: user.id,
+    bookId,
+    title: book.title,
+    reservedAt: new Date().toISOString(),
+    status: 'Ativa'
+  };
+
+  reservations.push(newReservation);
+  saveReservations(reservations);
+
+  showMessage('reserve-message', 'Reserva realizada com sucesso! Vá para suas reservas.', false);
+  updateBookDetailsUI(bookId);
+  syncCatalogBookCards();
   setTimeout(() => {
-    window.location.href = 'perfil.html';
-  }, 800);
+    window.location.href = 'reservas.html';
+  }, 900);
+}
+
+function cancelReservation(reservationId) {
+  const reservations = getStoredReservations();
+  const updated = reservations.map((reservation) =>
+    reservation.id === reservationId ? { ...reservation, status: 'Cancelada' } : reservation
+  );
+  saveReservations(updated);
+  syncCatalogBookCards();
+  if (window.location.pathname.includes('reservas.html')) {
+    renderReservationsPage();
+  }
+}
+
+function updateBookDetailsUI(bookId) {
+  const stock = getBookCurrentStock(bookId);
+  const availability = document.querySelector('#book-availability');
+  const stockElement = document.querySelector('#book-stock');
+  const reserveButton = document.querySelector('#reserve-button');
+
+  if (stockElement) {
+    stockElement.textContent = stock > 0 ? `${stock} cópia${stock === 1 ? '' : 's'} disponíveis` : 'Sem estoque';
+  }
+
+  if (availability) {
+    const statusClass = stock > 0 ? 'is-available' : 'is-unavailable';
+    const statusText = stock > 0 ? 'Disponível' : 'Indisponível';
+    availability.className = `availability ${statusClass}`;
+    availability.textContent = statusText;
+  }
+
+  if (reserveButton) {
+    if (stock > 0) {
+      reserveButton.disabled = false;
+      reserveButton.className = 'button button-primary';
+      reserveButton.textContent = 'Reservar livro';
+    } else {
+      reserveButton.disabled = true;
+      reserveButton.className = 'button button-secondary-muted';
+      reserveButton.textContent = 'Não disponível';
+    }
+  }
+}
+
+function syncCatalogBookCards() {
+  bookCards.forEach((card) => {
+    const bookId = parseInt(card.dataset.bookId, 10);
+    const stock = getBookCurrentStock(bookId);
+    const stockItem = card.querySelector('.book-stock');
+    const availabilityBadge = card.querySelector('.availability');
+
+    if (stockItem) {
+      stockItem.textContent = stock > 0 ? `${stock} cópia${stock === 1 ? '' : 's'} disponíveis` : 'Sem estoque';
+    }
+
+    if (availabilityBadge) {
+      availabilityBadge.textContent = stock > 0 ? (stock === 1 ? 'Última cópia' : 'Disponível') : 'Indisponível';
+      availabilityBadge.className = `availability ${stock > 0 ? 'is-available' : 'is-unavailable'}`;
+    }
+  });
+}
+
+function handleReserveButton(event) {
+  const bookId = parseInt(event.currentTarget.dataset.bookId, 10);
+  reserveBook(bookId);
+}
+
+function renderReservationsPage() {
+  const user = getAuthenticatedUser();
+  const reservationsContent = document.querySelector('#reservations-content');
+
+  if (!reservationsContent) {
+    return;
+  }
+
+  if (!user) {
+    reservationsContent.innerHTML = `
+      <h2>Minhas reservas</h2>
+      <p>Para ver suas reservas, faça login no sistema.</p>
+      <div class="auth-actions">
+        <a class="button button-primary" href="login.html">Entrar</a>
+        <a class="button button-secondary" href="cadastro.html">Cadastrar</a>
+      </div>
+    `;
+    return;
+  }
+
+  const activeReservations = getUserReservations(user.id);
+  const historyReservations = getUserReservationHistory(user.id);
+
+  const reservationItems = activeReservations.length
+    ? activeReservations
+        .map(
+          (reservation) => `
+            <li>
+              <strong>${reservation.title}</strong><br>
+              Reservado em: ${new Date(reservation.reservedAt).toLocaleDateString('pt-BR')}<br>
+              Status: ${reservation.status}
+              <button class="button button-secondary cancel-reservation-button" type="button" data-reservation-id="${reservation.id}">Cancelar</button>
+            </li>
+          `
+        )
+        .join('')
+    : '<li>Você não tem reservas ativas no momento.</li>';
+
+  const historyItems = historyReservations.length
+    ? historyReservations
+        .map(
+          (reservation) => `
+            <li>
+              <strong>${reservation.title}</strong><br>
+              Reservado em: ${new Date(reservation.reservedAt).toLocaleDateString('pt-BR')}<br>
+              Status: ${reservation.status}
+            </li>
+          `
+        )
+        .join('')
+    : '<li>Sem histórico de reservas.</li>';
+
+  reservationsContent.innerHTML = `
+    <h2>Minhas reservas</h2>
+    <p>Olá, ${user.name}. Veja abaixo suas reservas e histórico.</p>
+    <div class="reservation-section">
+      <h3>Reservas ativas</h3>
+      <ul class="placeholder-list">${reservationItems}</ul>
+    </div>
+    <div class="reservation-section">
+      <h3>Histórico de reservas</h3>
+      <ul class="placeholder-list">${historyItems}</ul>
+    </div>
+  `;
+
+  const cancelButtons = document.querySelectorAll('.cancel-reservation-button');
+  cancelButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const reservationId = parseInt(button.dataset.reservationId, 10);
+      cancelReservation(reservationId);
+    });
+  });
 }
 
 function handleSignupFormSubmit(event) {
@@ -419,6 +622,8 @@ function renderProfilePage() {
 
   const initials = getUserInitials(user.name);
   const roleLabel = user.role === 'teacher' ? 'Professor' : 'Aluno';
+  const activeReservations = getUserReservations(user.id);
+  const nextReturn = activeReservations.length > 0 ? '20 ago' : 'Nenhuma reserva ativa';
 
   profileInfo.innerHTML = `
     <div class="profile-summary">
@@ -433,7 +638,7 @@ function renderProfilePage() {
       <div class="profile-stats">
         <article class="profile-metric">
           <p class="metric-label">Reservas ativas</p>
-          <strong>2</strong>
+          <strong>${activeReservations.length}</strong>
         </article>
         <article class="profile-metric">
           <p class="metric-label">Livros lidos</p>
@@ -441,7 +646,7 @@ function renderProfilePage() {
         </article>
         <article class="profile-metric">
           <p class="metric-label">Próxima entrega</p>
-          <strong>20 ago</strong>
+          <strong>${nextReturn}</strong>
         </article>
       </div>
     </div>
@@ -474,49 +679,6 @@ function renderProfilePage() {
   }
 }
 
-function renderReservationsPage() {
-  const user = getAuthenticatedUser();
-  const reservationsContent = document.querySelector('#reservations-content');
-
-  if (!reservationsContent) {
-    return;
-  }
-
-  if (!user) {
-    reservationsContent.innerHTML = `
-      <h2>Minhas reservas</h2>
-      <p>Para ver suas reservas, faça login no sistema.</p>
-      <div class="auth-actions">
-        <a class="button button-primary" href="login.html">Entrar</a>
-        <a class="button button-secondary" href="cadastro.html">Cadastrar</a>
-      </div>
-    `;
-    return;
-  }
-
-  const mockReservations = [
-    { title: 'Dom Casmurro', status: 'Ativa', dueDate: '2026-08-20' },
-    { title: 'O Pequeno Príncipe', status: 'Pendente', dueDate: '2026-09-02' }
-  ];
-
-  const reservationList = mockReservations
-    .map(
-      (reservation) => `
-        <li>
-          <strong>${reservation.title}</strong><br>
-          Status: ${reservation.status} • Devolução: ${reservation.dueDate}
-        </li>
-      `
-    )
-    .join('');
-
-  reservationsContent.innerHTML = `
-    <h2>Minhas reservas</h2>
-    <p>Olá, ${user.name}. Aqui estão suas reservas simuladas.</p>
-    <ul class="placeholder-list">${reservationList}</ul>
-  `;
-}
-
 if (document.querySelector('#login-form')) {
   document.querySelector('#login-form')?.addEventListener('submit', handleLoginFormSubmit);
 }
@@ -539,6 +701,9 @@ if (document.currentScript.src.includes('main.js') && window.location.pathname.i
 
 window.addEventListener('DOMContentLoaded', () => {
   renderNavUser();
+  if (window.location.pathname.includes('catalogo.html')) {
+    syncCatalogBookCards();
+  }
 });
 
 // Executar também se o DOM já estiver carregado
